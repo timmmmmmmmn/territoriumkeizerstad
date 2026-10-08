@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Stickers van Territorium Keizerstad uit Nijmegen.">
+  <meta name="theme-color" content="#111111">
+  <title>Territorium Keizerstad</title>
+  <style>
+    :root {
+      --red: #D62828;
+      --green: #1E7B34;
+      --black: #111111;
+      --white: #ffffff;
+      --bg: #000000;
+      --muted: #5c5c5c;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      line-height: 1.5;
+      min-height: 100dvh;
+      padding-bottom: calc(130px + var(--safe-bottom));
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Header ---------- */
+    .top {
+      background: var(--bg);
+      border-bottom: 1px solid #1f1f1f;
+      padding: calc(12px + var(--safe-top)) 20px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+    }
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--red);
+      border: 3px solid var(--white);
+      box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+    .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ---------- Views ---------- */
+    .view { display: none; max-width: 760px; margin: 0 auto; }
+    .view.active { display: block; animation: fade .25s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .view-inner { padding: 20px 16px 32px; }
+
+    /* ---------- Slideshow ---------- */
+    .slideshow {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 5120 / 2160;
+      background: var(--black);
+      overflow: hidden;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .8s ease;
+    }
+    .slide.active { opacity: 1; }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* vult het vlak als de foto een andere verhouding heeft */
+      display: block;
+    }
+
+    /* ---------- Products ---------- */
+    .section-title {
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      margin: 0 2px 14px;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 560px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+    .card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    }
+    .card .img {
+      aspect-ratio: 1 / 1;
+      background: #fbfbfb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .card .img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .card .info {
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+    .card h4 { font-size: 17px; letter-spacing: -0.01em; }
+    .card p { color: var(--muted); font-size: 14px; flex: 1; }
+    .card .btn { margin-top: 10px; width: 100%; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--red);
+      color: var(--white);
+      text-decoration: none;
+      font: inherit;
+      font-weight: 600;
+      padding: 14px 22px;
+      border-radius: 14px;
+      border: 0;
+      cursor: pointer;
+      min-height: 48px;
+      transition: transform .15s ease, background .2s ease;
+    }
+    .btn:hover { background: #b81f1f; }
+    .btn:active { transform: scale(.97); }
+
+    /* ---------- Support ---------- */
+    .panel {
+      background: var(--white);
+      border-radius: 22px;
+      padding: 24px 20px;
+    }
+    .panel h2 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .panel p { color: var(--muted); margin-bottom: 18px; }
+    .insta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: var(--black);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .insta .handle { color: var(--green); font-weight: 700; }
+    .insta:hover { background: #222; }
+
+    /* ---------- Floating dock (iOS 26 style) ---------- */
+    .dock {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: calc(14px + var(--safe-bottom));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .glass {
+      pointer-events: auto;
+      background: rgba(255, 255, 255, 0.55);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.16),
+        0 2px 6px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+    .tabbar { display: flex; gap: 2px; padding: 6px; border-radius: 999px; }
+    .tab {
+      border: 0;
+      background: transparent;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--black);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-width: 74px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background .25s ease, color .25s ease;
+    }
+    .tab svg { width: 22px; height: 22px; }
+    .tab.active { background: var(--red); color: var(--white); box-shadow: 0 4px 12px rgba(214,40,40,.35); }
+    .search-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+    .search-btn svg { width: 22px; height: 22px; }
+
+    /* ---------- Search sheet ---------- */
+    .search-sheet {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 60;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: calc(16px + var(--safe-top)) 16px 16px;
+    }
+    .search-sheet.open { display: flex; animation: fade .2s ease; }
+    .search-panel {
+      width: 100%;
+      max-width: 620px;
+      background: var(--bg);
+      border-radius: 24px;
+      padding: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.3);
+    }
+    .search-row { display: flex; gap: 10px; align-items: center; }
+    .search-row input {
+      flex: 1;
+      font: inherit;
+      font-size: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      background: var(--white);
+      color: var(--black);
+      outline: none;
+    }
+    .search-row input:focus { border-color: var(--green); }
+    .close-btn {
+      border: 0;
+      background: var(--red);
+      color: var(--white);
+      font: inherit;
+      font-weight: 600;
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .results { margin-top: 12px; display: grid; gap: 8px; max-height: 60vh; overflow-y: auto; }
+    .result {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 12px 14px;
+      text-decoration: none;
+      color: var(--black);
+      display: flex;
+      flex-direction: column;
+    }
+    .result strong { font-size: 15px; }
+    .result span { font-size: 13px; color: var(--muted); }
+    .no-results { color: #a8a8a8; padding: 12px 4px; font-size: 14px; }
+
+    :focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+
+    @media (max-width: 380px) {
+      .tab { min-width: 66px; padding: 9px 10px; }
+      .search-btn { width: 52px; height: 52px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top">
+    <div class="logo">
+      <img src="images/logo.png" alt="Territorium Keizerstad logo">
+    </div>
+  </header>
+
+  <!-- HOME: slideshow + producten -->
+  <main class="view" id="home">
+    <div class="slideshow" id="slideshow" aria-label="Slideshow"></div>
+    <div class="view-inner">
+      <h2 class="section-title">Producten</h2>
+      <div class="grid" data-products></div>
+    </div>
+  </main>
+
+  <!-- PRODUCTEN -->
+  <main class="view" id="producten">
+    <div class="view-inner">
+      <h2 class="section-title">Producten</h2>
+      <div class="grid" data-products></div>
+    </div>
+  </main>
+
+  <!-- SUPPORT -->
+  <main class="view" id="support">
+    <div class="view-inner">
+      <div class="panel">
+        <h2>Support</h2>
+        <p>Heb je een vraag over een bestelling of een sticker? Stuur ons een berichtje op Instagram, dan helpen we je verder.</p>
+        <a class="insta" href="https://www.instagram.com/territoriumkeizerstad/" target="_blank" rel="noopener">
+          <span>Stuur een DM</span>
+          <span class="handle">@territoriumkeizerstad</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating dock -->
+  <nav class="dock" aria-label="Hoofdnavigatie">
+    <div class="glass tabbar">
+      <a class="tab" href="#home" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/></svg>
+        Home
+      </a>
+      <a class="tab" href="#producten" data-view="producten">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+        Producten
+      </a>
+      <a class="tab" href="#support" data-view="support">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg>
+        Support
+      </a>
+    </div>
+    <button class="glass search-btn" id="openSearch" aria-label="Zoeken">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </button>
+  </nav>
+
+  <!-- Zoeken -->
+  <div class="search-sheet" id="searchSheet" role="dialog" aria-modal="true" aria-label="Zoeken">
+    <div class="search-panel">
+      <div class="search-row">
+        <input type="search" id="q" placeholder="Zoek een sticker…" autocomplete="off" aria-label="Zoek een sticker">
+        <button class="close-btn" id="closeSearch">Sluit</button>
+      </div>
+      <div class="results" id="results"></div>
+    </div>
+  </div>
+
+  <script>
+    const FORM_URL = 'https://forms.gle/ikGYiuPSDgT3w9gy9';
+
+    // 10 slideshow-foto's (bij voorkeur 5120 x 2160)
+    const SLIDES = [
+      'images/slide-1.jpg',
+      'images/slide-2.jpg',
+      'images/slide-3.jpg',
+      'images/slide-4.jpg',
+      'images/slide-5.jpg',
+      'images/slide-6.jpg',
+      'images/slide-7.jpg',
+      'images/slide-8.jpg',
+      'images/slide-9.jpg',
+      'images/slide-10.jpg'
+    ];
+
+    const SLIDE_INTERVAL_MS = 30000; // elke 30 seconden een nieuwe foto
+
+    const PRODUCTS = [
+      {
+        id: 'nec-oasis',
+        naam: 'NEC Oasis sticker',
+        tekst: 'Sticker met het NEC Oasis-design.',
+        img: 'images/nec-oasis.png'
+      },
+      {
+        id: 'wij-gaan-europa-in',
+        naam: 'Wij gaan Europa in sticker',
+        tekst: 'Sticker met het "Wij gaan Europa in"-design.',
+        img: 'images/wij-gaan-europa-in.png'
+      }
+    ];
+
+    const VIEWS = ['home', 'producten', 'support'];
+
+    // ----- Routing via hash -----
+    function showView() {
+      const hash = (location.hash || '#home').slice(1);
+      const view = VIEWS.includes(hash) ? hash : 'home';
+      document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === view));
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+    window.addEventListener('hashchange', showView);
+
+    // ----- Producten renderen -----
+    function renderProducts() {
+      const html = PRODUCTS.map(p => `
+        <article class="card">
+          <div class="img"><img src="${p.img}" alt="${p.naam}" loading="lazy"></div>
+          <div class="info">
+            <h4>${p.naam}</h4>
+            <p>${p.tekst}</p>
+            <a class="btn" href="${FORM_URL}" target="_blank" rel="noopener">Bestel nu</a>
+          </div>
+        </article>`).join('');
+      document.querySelectorAll('[data-products]').forEach(el => el.innerHTML = html);
+    }
+
+    // ----- Slideshow -----
+    // Elke bezoek: willekeurige volgorde en random startfoto.
+    // Daarna wisselt hij elke 30 seconden door naar de volgende foto in die volgorde.
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function initSlideshow() {
+      const root = document.getElementById('slideshow');
+      if (!SLIDES.length) { root.style.display = 'none'; return; }
+
+      const order = shuffle(SLIDES);
+      root.innerHTML = order.map((src, i) =>
+        `<div class="slide${i === 0 ? ' active' : ''}"><img src="${src}" alt=""${i === 0 ? '' : ' loading="lazy"'}></div>`
+      ).join('');
+
+      if (order.length < 2) return;
+
+      const slides = root.querySelectorAll('.slide');
+      let current = 0;
+
+      setInterval(() => {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+      }, SLIDE_INTERVAL_MS);
+    }
+
+    // ----- Zoeken -----
+    const sheet = document.getElementById('searchSheet');
+    const input = document.getElementById('q');
+    const results = document.getElementById('results');
+
+    function renderResults(term) {
+      const t = term.trim().toLowerCase();
+      if (!t) { results.innerHTML = ''; return; }
+      const found = PRODUCTS.filter(p => (p.naam + ' ' + p.tekst).toLowerCase().includes(t));
+      results.innerHTML = found.length
+        ? found.map(p => `
+            <a class="result" href="#producten" data-close="1">
+              <strong>${p.naam}</strong>
+              <span>${p.tekst}</span>
+            </a>`).join('')
+        : '<div class="no-results">Geen resultaten gevonden.</div>';
+    }
+
+    function openSearch() {
+      sheet.classList.add('open');
+      setTimeout(() => input.focus(), 50);
+    }
+    function closeSearch() {
+      sheet.classList.remove('open');
+      input.value = '';
+      results.innerHTML = '';
+      input.blur();
+    }
+
+    document.getElementById('openSearch').addEventListener('click', openSearch);
+    document.getElementById('closeSearch').addEventListener('click', closeSearch);
+    input.addEventListener('input', e => renderResults(e.target.value));
+    results.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeSearch(); });
+    sheet.addEventListener('click', e => { if (e.target === sheet) closeSearch(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
+
+    // ----- Init -----
+    renderProducts();
+    initSlideshow();
+    showView();
+  </script>
+</body>
+</html>

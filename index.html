@@ -177,6 +177,21 @@
     .btn:hover { background: var(--green); }
     .btn:active { transform: scale(.97); }
 
+    .soldout {
+      margin-top: 10px;
+      width: 100%;
+      text-align: center;
+      background: var(--red);
+      color: var(--white);
+      font-size: clamp(26px, 6vw, 40px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 16px 12px;
+      border-radius: 14px;
+      cursor: default;
+    }
+
     /* ---------- Uitgelicht ---------- */
     .featured {
       background: var(--white);
@@ -671,7 +686,7 @@
           <div class="img"><img src="${p.img}" alt="${p.naam}" loading="lazy"></div>
           <div class="info">
             <h4>${p.naam}</h4>
-            <a class="btn" href="${FORM_URL}" target="_blank" rel="noopener">Bestel nu</a>
+            <div class="soldout" data-i18n="soldOut">Uitverkocht</div>
           </div>
         </article>`).join('');
       document.querySelectorAll('[data-products]').forEach(el => el.innerHTML = html);
@@ -687,7 +702,7 @@
           <div class="featured-img"><img src="${p.img}" alt="${p.naam}" loading="lazy"></div>
           <div class="featured-info">
             <h3>${p.naam}</h3>
-            <a class="btn" href="${FORM_URL}" target="_blank" rel="noopener">Bestel nu</a>
+            <div class="soldout" data-i18n="soldOut">Uitverkocht</div>
           </div>
         </article>`;
     }
@@ -838,7 +853,8 @@
         mailQ: 'Vrage? Mail ons effe op',
         followIg: 'Kiek oek effe op onze insta!',
         priceNote: 'Koste krieg je te zien op de bestelpagina.',
-        shareLabel: 'Deel effe'
+        shareLabel: 'Deel effe',
+        soldOut: 'Uutverkocht'
       },
       nl: {
         home: 'Home',
@@ -848,7 +864,8 @@
         mailQ: 'Vragen? Mail ons op',
         followIg: 'Volg ons op Instagram',
         priceNote: 'Kosten kunnen veranderen dus ziet u pas in het bestel nu menu',
-        shareLabel: 'Deel deze site'
+        shareLabel: 'Deel deze site',
+        soldOut: 'Uitverkocht'
       }
     };
 
